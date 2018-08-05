@@ -16,10 +16,19 @@ local groups = {
     "testgroup",
 }
 -- add the prefix and convert to a true/false map.
-local ingroups = {}
-for i, k in ipairs(groups) do
-    local tk = prefix..k
-    ingroups[tk] = true
+local ingroups
+
+-- populate map on first programming only
+if event.type == "program" then
+    ingroups = {}
+    for i, k in ipairs(groups) do
+        local tk = prefix..k
+        ingroups[tk] = true
+    end
+    mem.ingroups = ingroups
+else
+    -- load from memory
+    ingroups = mem.ingroups
 end
 
 -- which port to control
