@@ -19,6 +19,9 @@ local song = {
 -- note delay, controls song speed
 local delay = 0.2
 
+-- loop at end of song?
+local loop = false
+
 -- noteblock channels here
 local channel_map = {
 	"noteblock1",
@@ -56,10 +59,14 @@ if src == "program" then
 elseif src == "interrupt" then
 	-- progress song on each interrupt
 	local note = song[mem.sequence]
+	mem.sequence = mem.sequence + 1
 	-- don't go past end of song.
-	if note then
-		mem.sequence = mem.sequence + 1
-		play_note(note)
+	if mem.sequence > #song then
+		if loop then
+			mem.sequence = 1
+			next()
+		end
+	else
 		next()
 	end
 elseif src == "digiline" and event.channel == rchan and event.msg == "reset" then
